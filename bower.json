@@ -1,0 +1,28 @@
+{
+  "name": "philips-hue-web-api",
+  "version": "0.0.0",
+  "homepage": "https://github.com/codeandcats/philips-hue-web-api",
+  "authors": [
+    "Ben <codeandcats@gmail.com>"
+  ],
+  "description": "Node web api for controlling Philips Hue lightbulbs.",
+  "main": "./bin/www",
+  "moduleType": [],
+  "keywords": [
+    "philips",
+    "hue",
+    "api"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.7"
+  }
+}
