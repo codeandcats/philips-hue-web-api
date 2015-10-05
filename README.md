@@ -1,2 +1,2 @@
-# philips-hue-web-api
-Node web api for Philips Hue
+# Philips Hue Web API
+Node web api for controlling Philips Hue lightbulbs.
