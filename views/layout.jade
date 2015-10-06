@@ -1,7 +1,25 @@
 doctype html
-html
+
+html(lang='en')
 	head
+		meta(charset="utf-8")
+		meta(http-equiv="X-UA-Compatible", content="IE=edge")
+		meta(name="viewport", content="width=device-width, initial-scale=1")
+	
 		title= title
+		
+		// CSS
+		link(rel='stylesheet', href='/bootstrap/dist/css/bootstrap.min.css')
 		link(rel='stylesheet', href='/stylesheets/style.css')
-	body
+		
+		// JS Libraries
+		script(src='/angular/angular.min.js')
+		script(src='/jquery/dist/jquery.min.js')
+		script(src='/bootstrap/dist/js/bootstrap.min.js')
+		
+	body(ng-app='HueWeb')
 		block content
+
+		// App JS
+		script(src='/javascripts/app.js')
+		script(src='/javascripts/controllers/setupWizard.js')

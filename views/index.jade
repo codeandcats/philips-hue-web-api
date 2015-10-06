@@ -1,5 +1,8 @@
 extends layout
 
 block content
-	h1= title
-	p Welcome to #{title}
+	div(ng-controller='SetupWizard as wizard')
+		h1 Philips Hue Web
+		p Step {{wizard.step}}
+		p Click Next to get started.
+		button(ng-click='wizard.next()', ng-disabled='!wizard.canNavigate(1)') Next

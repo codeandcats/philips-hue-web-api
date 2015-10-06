@@ -1,7 +1,22 @@
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+html,
+body {
+  text-align: center;
 }
 a {
   color: #00b7ff;
+}
+.content {
+  text-align: center;
+}
+button {
+  padding: 5px 15px;
+  background-color: #fefefe;
+  outline: 0;
+}
+button:disabled {
+  color: #c0c0c0;
 }
