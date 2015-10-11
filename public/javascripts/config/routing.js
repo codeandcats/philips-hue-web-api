@@ -1,3 +1,4 @@
+/*
 angular.module('HueWeb').config(['$routeProvider', '$locationProvider',
 	function($routeProvider, $locationProvider) {
 		
@@ -16,3 +17,4 @@ angular.module('HueWeb').config(['$routeProvider', '$locationProvider',
 		$locationProvider.html5Mode(true);
 		
 	}])
+*/

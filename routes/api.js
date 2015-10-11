@@ -25,8 +25,19 @@ function handleError(res, err, errCode) {
 	res.send(errCode, (err && err.message) || err);
 }
 
+// Connect to bridge
+router.get('/bridges/:id/connect', function(req, res, next) {
+	
+	hue.nupnpSearch().then(function(bridges) {
+		res.json(bridges);
+	}).fail(function(err) {
+		handleError(res, err);
+	})
+	
+});
+
 // Search for bridges
-router.get('/bridges', function(req, res, next) {
+router.get('/bridges/search', function(req, res, next) {
 	
 	hue.nupnpSearch().then(function(bridges) {
 		res.json(bridges);
