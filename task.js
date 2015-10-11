@@ -7,7 +7,7 @@ switch (args[0]) {
 		showConfig();
 		break;
 	
-	case 'list':
+	case 'bridges':
 		listRegisteredBridges();
 		break;
 		
@@ -29,10 +29,12 @@ switch (args[0]) {
 	
 	default:
 		console.log('Nope! Correct usage:');
-		console.log('\tlist                  Lists registered bridges');
-		console.log('\tlights                Lists lights of registered bridges');
-		console.log('\tsearch                Searches for bridges');
-		console.log('\tregister <bridge ip>  Register a bridge');
+		console.log('');
+		console.log('\tbridges                 Lists registered bridges');
+		console.log('\tsearch                  Searches for bridges');
+		console.log('\tregister <bridge ip>    Register a bridge');
+		console.log('\tunregister <bridge ip>  Unregister a bridge');
+		console.log('\tlights                  Lists lights of registered bridges');
 		break;
 }
 
@@ -64,7 +66,7 @@ function showConfig() {
 function searchForBridges() {
 	wrapper.searchForBridges(function(err, bridges) {
 		if (err) {
-			console.error('Search failed: ', err);
+			logError('Search failed', err);
 		}
 		else if (bridges && bridges.length) {
 			console.log('Found bridges: ', bridges);
@@ -78,7 +80,7 @@ function searchForBridges() {
 function listRegisteredBridges() {
 	wrapper.getBridges(function(err, bridges) {
 		if (err) {
-			logError(err);
+			logError('Error listing bridges', err);
 		}
 		else {
 			console.log('Bridges: ', bridges);
@@ -100,7 +102,7 @@ function registerBridge(ipAddress) {
 function unregisterBridge(ipAddress) {
 	wrapper.unregisterBridge(ipAddress, function(err) {
 		if (err) {
-			console.error('Error unregistering bridge: ', err);
+			logError('Error unregistering bridge', err);
 		}
 		else {
 			console.log('Unregistered Bridge');
@@ -109,12 +111,15 @@ function unregisterBridge(ipAddress) {
 }
 
 function listLights() {
-	wrapper.getLights(function(err, lights) {
+	wrapper.getLights(function(err, bridges) {
 		if (err) {
-			console.error('Error getting lights: ', err);
+			logError('Error getting lights', err);
 		}
 		else {
-			console.log('Lights: ', lights);
+			bridges.forEach(function(bridge) {
+				console.log('Bridge ' + bridge.ipAddress + ' lights:', bridge.lights);
+				console.log('');
+			});
 		}
 	});
 }
