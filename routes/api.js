@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var hue = require('node-hue-api');
+var wrapper = require('../wrapper');
+var linq = require('linq');
 
 /*
 
@@ -27,47 +28,66 @@ function handleError(res, err, errCode) {
 
 // Connect to bridge
 router.get('/bridges/:id/connect', function(req, res, next) {
-	
-	hue.nupnpSearch().then(function(bridges) {
-		res.json(bridges);
-	}).fail(function(err) {
-		handleError(res, err);
-	})
-	
+	wrapper.registerBridge(req.params.id, function(err) {
+		if (err) {
+			handleError(res, err);
+		}
+		else {
+			res.status(201).json('Connected to bridge');
+		}
+	});
+});
+
+// List bridges
+router.get('/bridges', function(req, res, next) {
+	wrapper.getBridges(function(err, bridges) {
+		if (err) {
+			handleError(res, err);
+		}
+		else {
+			res.json(bridges);
+		}
+	});
 });
 
 // Search for bridges
 router.get('/bridges/search', function(req, res, next) {
-	
-	hue.nupnpSearch().then(function(bridges) {
-		res.json(bridges);
-	}).fail(function(err) {
-		handleError(res, err);
-	})
-	
+	wrapper.searchForBridges(function(err, bridges) {
+		if (err) {
+			handleError(res, err);
+		}
+		else {
+			res.json(bridges);
+		}
+	});
 });
 
-router.get('/bridges/:id/:userId', function(req, res, next) {
-	
-	var ipRegEx = /(?:[0-9]{1,3}\.){3}[0-9]{1,3}/,
-		id = req.params.id,
-		userId = req.params.userId,
-		ipAddress = ipRegEx.test(id) ? id : null,
-		api;
-	
-	if (ipAddress) {
-		api = new hue.HueApi(ipAddress, userId);
-		
-		api.config().then(function(settings) {
-			res.json(settings);
-		}).fail(function(err) {
+// List of lights
+router.get('/lights', function(req, res, next) {
+	wrapper.getLights(function(err, bridges) {
+		if (err) {
 			handleError(res, err);
-		});
-	}
-	else {
-	}
-	
+		}
+		else {
+			res.json(bridges);
+		}
+	});
 });
+
+// Get light by bridge ip & light id
+router.get('/lights/:ip(\d+\.\d+\.\d+\.\d+)/:id', function(req, res, next) {
+	wrapper.getLights(function(err, bridges) {
+		if (err) {
+			handleError(res, err);
+		}
+		else {
+			
+			res.json(bridges);
+		}
+	});
+});
+
+// Update lights
 
 
 module.exports = router;
