@@ -206,6 +206,109 @@
 		});
 	}
 	
+	function setLightState(light, state, done) {
+		done = done || function() {};
+		
+		// Create the actual state object that we need to 
+		// apply our transformations to
+		var actualState = hue.lightState.create();
+		
+		// Light on or off?
+		if (state.on !== undefined) {
+			if (String(state.on).toLowerCase() == 'true' || state.on == 1) {
+				state.on = true;
+			}
+			else {
+				state.on = false;
+			}
+			actualState = actualState.on(state.on);
+		}
+		
+		// Brightness?
+		if (state.brightness != undefined) {
+			actualState = actualState.bri(state.brightness);
+		}
+		
+		// Hue?
+		if (state.hue != undefined) {
+			actualState = actualState.hue(state.hue);
+		}
+		
+		// Saturation?
+		if (state.saturation != undefined) {
+			actualState = actualState.saturation(state.saturation);
+		}
+		
+		// Alert?
+		if (state.alert != undefined) {
+			actualState = actualState.alert(state.alert);
+		}
+		
+		// Effect?
+		if (state.effect != undefined) {
+			actualState = actualState.effect(state.effect);
+		}
+		
+		getConfig(function(err, config) {
+			if (err) {
+				done(err);
+			}
+			else {
+				var foundLight = false;
+				var errored = false;
+				
+				config.bridges.forEach(function(bridge) {
+					if (foundLight || errored) {
+						return;
+					}
+					
+					if ((bridge.ipAddress == light.ip) || (light.ip == undefined)) {
+						// Connect to bridge
+						var api = new hue.HueApi(bridge.ipAddress, bridge.userId);
+					
+						// Get lights connected to bridge
+						api.lights().then(function(info) {
+							if (foundLight || errored) {
+								return;
+							}
+							
+							var actualLight = linq
+								.from(info.lights)
+								.firstOrDefault(function(l) {
+									return l.id == light.id;
+								});
+							
+							if (actualLight) {
+								foundLight = true;
+								
+								console.log('API setting light state!', light, actualState);
+								
+								api.setLightState(light.id, actualState)
+									.then(function(state) {
+										console.log('API done setting light state - succeeded!', state);
+										done(null, state);
+									})
+									.fail(function(err) {
+										console.log('API done setting light state - failed!', err);
+										errored = true;
+									});
+							}
+						})
+						.fail(function(err) {
+							console.log('WTF - Failed? Really??', err);
+							errored = true;
+							done(err);
+						});
+					}
+				});
+				
+				if (!foundLight && !errored) {
+					done(new Error('Light not found'));
+				}
+			}
+		});
+	}
+	
 	module.exports.getConfig = getConfig;
 	module.exports.setConfig = setConfig;
 	module.exports.searchForBridges = searchForBridges;
@@ -213,7 +316,7 @@
 	module.exports.registerBridge = registerBridge;
 	module.exports.unregisterBridge = unregisterBridge;
 	module.exports.getLights = getLights;
-	
+	module.exports.setLightState = setLightState;
 	
 })(module);
 
